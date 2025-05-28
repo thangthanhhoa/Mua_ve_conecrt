@@ -1,0 +1,118 @@
+.customer-form {
+  background: rgba(255,255,255,0.98);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(30,60,114,0.13), 0 1.5px 6px rgba(0,0,0,0.07);
+  padding: 1.5rem 1.1rem 1.1rem 1.1rem;
+  max-width: 340px;
+  margin: 0 auto;
+  margin-top: 1.2rem;
+  transition: box-shadow 0.2s;
+}
+
+.customer-form:hover {
+  box-shadow: 0 8px 24px rgba(30,60,114,0.16), 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.customer-form h2 {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: #183a6d;
+  letter-spacing: 0.5px;
+}
+
+.customer-form .form-group {
+  margin-bottom: 0.8rem;
+}
+
+.customer-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: #2a5298;
+  font-size: 0.92rem;
+}
+
+.customer-form input,
+.customer-form select {
+  width: 90%;
+  padding: 0.38rem 0.6rem;
+  border: 1.1px solid #bfc9e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #f7faff;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+  margin-top: 1px;
+  font-family: inherit;
+}
+
+.customer-form input:focus,
+.customer-form select:focus {
+  border: 1.2px solid #2a5298;
+  box-shadow: 0 0 0 2px #e0e7ff;
+  background: #f0f6ff;
+}
+
+.customer-form .submit-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.7rem 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.4rem;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 6px rgba(30,60,114,0.08);
+  letter-spacing: 0.5px;
+}
+
+.customer-form .submit-btn:hover {
+  background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 3px 12px rgba(30,60,114,0.10);
+}
+
+.children-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 5px;
+}
+
+.add-child-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.price-summary {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e8f5e9;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.price-summary h3 {
+  color: #2a5298;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+  .customer-form {
+    padding: 0.7rem 0.2rem 0.7rem 0.2rem;
+    max-width: 98vw;
+  }
+  .customer-form h2 {
+    font-size: 1.05rem;
+  }
+} 

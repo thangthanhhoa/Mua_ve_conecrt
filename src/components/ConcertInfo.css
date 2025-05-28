@@ -1,0 +1,30 @@
+.concert-info {
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-item {
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 5px;
+}
+
+.info-item h3 {
+  color: #2a5298;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.info-item p {
+  color: #333;
+  font-size: 1.2em;
+  font-weight: 500;
+} 
