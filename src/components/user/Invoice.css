@@ -1,0 +1,35 @@
+.invoice-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.invoice-container h3 {
+  margin-top: 2rem;
+  color: #1976d2;
+}
+
+.invoice-footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+}
+
+.invoice-error {
+  text-align: center;
+  color: #c62828;
+  background: #ffebee;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 500px;
+} 

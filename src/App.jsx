@@ -10,6 +10,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import EventList from './components/EventList'
 import MyTickets from './components/MyTickets'
 import AdminDashboard from './components/admin/AdminDashboard'
+import OrderHistory from './components/user/OrderHistory'
+import ChangePassword from './components/user/ChangePassword'
+// import ProfileSettings nếu có
+// import ProfileSettings from './components/user/ProfileSettings'
 
 // Giả lập dữ liệu
 const mockEvents = [
@@ -229,6 +233,9 @@ function App() {
       <button className={customerTab === 'booking' ? 'active' : ''} onClick={() => setCustomerTab('booking')}>Đặt vé</button>
       <button className={customerTab === 'events' ? 'active' : ''} onClick={() => setCustomerTab('events')}>Sự kiện</button>
       <button className={customerTab === 'tickets' ? 'active' : ''} onClick={() => setCustomerTab('tickets')}>Vé của tôi</button>
+      <button className={customerTab === 'orderhistory' ? 'active' : ''} onClick={() => setCustomerTab('orderhistory')}>Lịch sử đơn hàng</button>
+      <button className={customerTab === 'changepw' ? 'active' : ''} onClick={() => setCustomerTab('changepw')}>Đổi mật khẩu</button>
+      {/* <button className={customerTab === 'profile' ? 'active' : ''} onClick={() => setCustomerTab('profile')}>Cài đặt tài khoản</button> */}
     </nav>
   );
 
@@ -358,6 +365,21 @@ function App() {
               <MyTickets />
             </div>
           )}
+          {customerTab === 'orderhistory' && (
+            <div style={{width: '100%'}}>
+              <OrderHistory />
+            </div>
+          )}
+          {customerTab === 'changepw' && (
+            <div style={{width: '100%'}}>
+              <ChangePassword />
+            </div>
+          )}
+          {/* {customerTab === 'profile' && (
+            <div style={{width: '100%'}}>
+              <ProfileSettings user={user} />
+            </div>
+          )} */}
         </main>
       </div>
     </Router>

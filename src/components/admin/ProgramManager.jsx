@@ -1,138 +1,193 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 
-const defaultForm = { name: '', date: '', venue: '', status: '' };
+// Dữ liệu mẫu chương trình/sự kiện
+const mockEvents = [
+  { event_id: 1, name: 'Hòa nhạc Mùa Hè', date: '2024-06-01', stage_id: 1, status: 'Sắp diễn ra' },
+  { event_id: 2, name: 'Lễ hội Âm nhạc', date: '2024-06-02', stage_id: 2, status: 'Đã kết thúc' }
+];
+
+// Dữ liệu mẫu địa điểm
+const mockStages = [
+  { stage_id: 1, name: 'Nhà Hát Lớn' },
+  { stage_id: 2, name: 'Sân Vận Động' }
+];
+
+// Dữ liệu mẫu loại ghế
+const mockTypes = [
+  { type_id: 1, name: 'VIP' },
+  { type_id: 2, name: 'Thường' }
+];
+
+// Dữ liệu mẫu ghế sự kiện
+const mockStageSeatEvents = [
+  { stage_seat_event_id: 1, event_id: 1, stage_id: 1, type_id: 1, row: 1, column: 1, price: 1000000, active: true, status: 'open' },
+  { stage_seat_event_id: 2, event_id: 1, stage_id: 1, type_id: 2, row: 1, column: 2, price: 500000, active: true, status: 'sold' },
+  { stage_seat_event_id: 3, event_id: 2, stage_id: 2, type_id: 1, row: 1, column: 1, price: 1200000, active: false, status: 'hold' }
+];
+
+const statusMap = {
+  open: 'Còn trống',
+  sold: 'Đã bán',
+  hold: 'Đang giữ'
+};
 
 const ProgramManager = () => {
-  const [programs, setPrograms] = useState([]);
-  const [form, setForm] = useState(defaultForm);
-  const [editing, setEditing] = useState(null);
-  const [viewing, setViewing] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [stages, setStages] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [stageSeatEvents, setStageSeatEvents] = useState([]);
+  const [showSeats, setShowSeats] = useState(null); // event_id đang xem ghế
+  const [editingSeat, setEditingSeat] = useState(null);
+  const [seatForm, setSeatForm] = useState({ row: '', column: '', type_id: '', price: '', active: true, status: 'open' });
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('programs') || '[]');
-    setPrograms(stored.length ? stored : [
-      { id: 1, name: "Hòa nhạc Mùa Hè", date: "2025-05-25", venue: "Nhà hát Hòa Bình", status: "Sắp diễn ra" },
-      { id: 2, name: "Rock Night", date: "2025-06-02", venue: "Sân vận động Thống Nhất", status: "Đang bán vé" }
-    ]);
+    setEvents(mockEvents);
+    setStages(mockStages);
+    setTypes(mockTypes);
+    setStageSeatEvents(mockStageSeatEvents);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('programs', JSON.stringify(programs));
-  }, [programs]);
-
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // Thao tác ghế sự kiện
+  const handleAddSeat = (event_id, stage_id) => {
+    if (!seatForm.row || !seatForm.column || !seatForm.type_id || !seatForm.price) {
+      alert('Nhập đủ thông tin ghế!');
+      return;
+    }
+    const newSeat = {
+      stage_seat_event_id: Date.now(),
+      event_id,
+      stage_id,
+      ...seatForm,
+      type_id: Number(seatForm.type_id),
+      price: Number(seatForm.price),
+      active: Boolean(seatForm.active)
+    };
+    setStageSeatEvents([...stageSeatEvents, newSeat]);
+    setSeatForm({ row: '', column: '', type_id: '', price: '', active: true, status: 'open' });
   };
-
-  const handleAdd = () => {
-    if (!form.name || !form.date || !form.venue || !form.status) return alert('Điền đủ thông tin!');
-    setPrograms([...programs, { ...form, id: Date.now() }]);
-    setForm(defaultForm);
+  const handleEditSeat = (seat) => {
+    setEditingSeat(seat.stage_seat_event_id);
+    setSeatForm({
+      row: seat.row,
+      column: seat.column,
+      type_id: seat.type_id,
+      price: seat.price,
+      active: seat.active,
+      status: seat.status
+    });
   };
-
-  const handleEdit = p => {
-    setEditing(p.id);
-    setForm(p);
+  const handleUpdateSeat = (event_id, stage_id) => {
+    setStageSeatEvents(stageSeatEvents.map(s =>
+      s.stage_seat_event_id === editingSeat ? { ...seatForm, stage_seat_event_id: editingSeat, event_id, stage_id, type_id: Number(seatForm.type_id), price: Number(seatForm.price), active: Boolean(seatForm.active) } : s
+    ));
+    setEditingSeat(null);
+    setSeatForm({ row: '', column: '', type_id: '', price: '', active: true, status: 'open' });
   };
-
-  const handleUpdate = () => {
-    setPrograms(programs.map(p => p.id === editing ? { ...form, id: editing } : p));
-    setEditing(null);
-    setForm(defaultForm);
-  };
-
-  const handleDelete = id => {
-    if (window.confirm('Xóa chương trình này?')) {
-      setPrograms(programs.filter(p => p.id !== id));
+  const handleDeleteSeat = (seat_id) => {
+    if (window.confirm('Xóa ghế này?')) {
+      setStageSeatEvents(stageSeatEvents.filter(s => s.stage_seat_event_id !== seat_id));
     }
   };
-
-  const handleView = p => setViewing(p);
-  const closeView = () => setViewing(null);
 
   return (
     <div style={{padding: 32, background: 'rgba(255,255,255,0.95)', borderRadius: 12}}>
       <h2 style={{marginBottom: 16}}>Quản lý chương trình</h2>
-      <div style={{marginBottom: 24}}>
-        <input name="name" placeholder="Tên chương trình" value={form.name} onChange={handleChange} style={{marginRight:8}} />
-        <input name="date" type="date" placeholder="Ngày" value={form.date} onChange={handleChange} style={{marginRight:8}} />
-        <input name="venue" placeholder="Địa điểm" value={form.venue} onChange={handleChange} style={{marginRight:8}} />
-        <input name="status" placeholder="Trạng thái" value={form.status} onChange={handleChange} style={{marginRight:8}} />
-        {editing ? (
-          <button className="btn edit" onClick={handleUpdate}><FaEdit /> Cập nhật</button>
-        ) : (
-          <button className="btn edit" onClick={handleAdd}><FaEdit /> Thêm</button>
-        )}
-      </div>
       <table style={{width: '100%', borderCollapse: 'separate', borderSpacing: 0, background: 'transparent'}}>
         <thead>
           <tr style={{background: '#f5f7fa'}}>
-            <th style={thStyle}>ID</th>
-            <th style={thStyle}>Tên chương trình</th>
-            <th style={thStyle}>Ngày</th>
-            <th style={thStyle}>Địa điểm</th>
-            <th style={thStyle}>Trạng thái</th>
-            <th style={thStyle}>Hành động</th>
+            <th>ID</th>
+            <th>Tên chương trình</th>
+            <th>Ngày</th>
+            <th>Địa điểm</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
-          {programs.map(p => (
-            <tr key={p.id} style={{background: '#fff', borderRadius: 8}}>
-              <td style={tdStyle}>{p.id}</td>
-              <td style={tdStyle}>{p.name}</td>
-              <td style={tdStyle}>{p.date}</td>
-              <td style={tdStyle}>{p.venue}</td>
-              <td style={tdStyle}>{p.status}</td>
-              <td style={tdStyle}>
-                <div style={{display:'flex',gap:8,justifyContent:'center'}}>
-                  <button className="btn edit" title="Sửa" onClick={() => handleEdit(p)}><FaEdit /> Sửa</button>
-                  <button className="btn delete" title="Xóa" onClick={() => handleDelete(p.id)}><FaTrash /> Xóa</button>
-                  <button className="btn view" title="Xem" onClick={() => handleView(p)}><FaEye /> Xem</button>
-                </div>
+          {events.map(ev => (
+            <tr key={ev.event_id} style={{background: '#fff', borderRadius: 8}}>
+              <td>{ev.event_id}</td>
+              <td>{ev.name}</td>
+              <td>{ev.date}</td>
+              <td>{stages.find(s=>s.stage_id===ev.stage_id)?.name}</td>
+              <td>{ev.status}</td>
+              <td>
+                <button className="btn view" title="Sơ đồ ghế" onClick={()=>setShowSeats(ev.event_id)}><FaEye /> Ghế</button>
+                {/* Các nút Sửa/Xóa chương trình nếu cần */}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {viewing && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.3)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}} onClick={closeView}>
-          <div style={{background:'#fff',padding:32,borderRadius:12,minWidth:320}} onClick={e=>e.stopPropagation()}>
-            <h3>Chi tiết chương trình</h3>
-            <p><b>ID:</b> {viewing.id}</p>
-            <p><b>Tên:</b> {viewing.name}</p>
-            <p><b>Ngày:</b> {viewing.date}</p>
-            <p><b>Địa điểm:</b> {viewing.venue}</p>
-            <p><b>Trạng thái:</b> {viewing.status}</p>
-            <button className="btn view" onClick={closeView}>Đóng</button>
+      {/* Popup sơ đồ ghế sự kiện */}
+      {showSeats && (
+        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(30,60,114,0.15)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}}>
+          <div style={{background:'white',borderRadius:12,padding:32,minWidth:600,maxWidth:900,maxHeight:'80vh',overflow:'auto',boxShadow:'0 4px 24px rgba(30,60,114,0.15)'}}>
+            <h3 style={{color:'#2a5298',marginBottom:18}}>Sơ đồ ghế - {events.find(e=>e.event_id===showSeats)?.name}</h3>
+            <table style={{width:'100%',borderCollapse:'collapse'}}>
+              <thead>
+                <tr style={{background:'#f5f7fa'}}>
+                  <th>Hàng</th>
+                  <th>Cột</th>
+                  <th>Loại ghế</th>
+                  <th>Giá</th>
+                  <th>Trạng thái</th>
+                  <th>Hoạt động</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stageSeatEvents.filter(s=>s.event_id===showSeats).map(seat=>(
+                  <tr key={seat.stage_seat_event_id}>
+                    <td>{seat.row}</td>
+                    <td>{seat.column}</td>
+                    <td>{types.find(t=>t.type_id===seat.type_id)?.name}</td>
+                    <td>{seat.price.toLocaleString('vi-VN')}đ</td>
+                    <td>{statusMap[seat.status]}</td>
+                    <td>{seat.active ? 'Hoạt động' : 'Tắt'}</td>
+                    <td>
+                      <button onClick={()=>handleEditSeat(seat)}><FaEdit /></button>
+                      <button onClick={()=>handleDeleteSeat(seat.stage_seat_event_id)}><FaTrash /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* Form thêm/sửa ghế */}
+            <div style={{marginTop:18}}>
+              <h4>{editingSeat ? 'Sửa ghế' : 'Thêm ghế mới'}</h4>
+              <input type="number" placeholder="Hàng" value={seatForm.row} onChange={e=>setSeatForm({...seatForm,row:e.target.value})} style={{marginRight:8}} />
+              <input type="number" placeholder="Cột" value={seatForm.column} onChange={e=>setSeatForm({...seatForm,column:e.target.value})} style={{marginRight:8}} />
+              <select value={seatForm.type_id} onChange={e=>setSeatForm({...seatForm,type_id:e.target.value})} style={{marginRight:8}}>
+                <option value="">Chọn loại ghế</option>
+                {types.map(t=>(<option key={t.type_id} value={t.type_id}>{t.name}</option>))}
+              </select>
+              <input type="number" placeholder="Giá" value={seatForm.price} onChange={e=>setSeatForm({...seatForm,price:e.target.value})} style={{marginRight:8}} />
+              <select value={seatForm.status} onChange={e=>setSeatForm({...seatForm,status:e.target.value})} style={{marginRight:8}}>
+                <option value="open">Còn trống</option>
+                <option value="sold">Đã bán</option>
+                <option value="hold">Đang giữ</option>
+              </select>
+              <select value={seatForm.active} onChange={e=>setSeatForm({...seatForm,active:e.target.value==='true'})} style={{marginRight:8}}>
+                <option value="true">Hoạt động</option>
+                <option value="false">Tắt</option>
+              </select>
+              {editingSeat ? (
+                <>
+                  <button onClick={()=>handleUpdateSeat(showSeats, events.find(e=>e.event_id===showSeats)?.stage_id)}>Cập nhật</button>
+                  <button onClick={()=>{setEditingSeat(null);setSeatForm({ row: '', column: '', type_id: '', price: '', active: true, status: 'open' });}}>Hủy</button>
+                </>
+              ) : (
+                <button onClick={()=>handleAddSeat(showSeats, events.find(e=>e.event_id===showSeats)?.stage_id)}>Thêm ghế</button>
+              )}
+            </div>
+            <button onClick={()=>{setShowSeats(null);setEditingSeat(null);setSeatForm({ row: '', column: '', type_id: '', price: '', active: true, status: 'open' });}} style={{marginTop:18,width:'100%',background:'#bbb',color:'white',padding:10,border:'none',borderRadius:8}}>Đóng</button>
           </div>
         </div>
       )}
-      <style>{`
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          border: none;
-          border-radius: 8px;
-          padding: 6px 16px;
-          font-weight: 600;
-          font-size: 1rem;
-          cursor: pointer;
-          margin-right: 4px;
-          margin-bottom: 2px;
-        }
-        .btn.edit { background: #2196f3; color: #fff; }
-        .btn.delete { background: #f44336; color: #fff; }
-        .btn.view { background: #4caf50; color: #fff; }
-        .btn:active { opacity: 0.85; }
-        th, td { text-align: center; }
-      `}</style>
     </div>
   );
 };
-
-const thStyle = { padding: '12px 8px', fontWeight: 700, color: '#223', fontSize: '1.08rem', background: '#f5f7fa' };
-const tdStyle = { padding: '10px 8px', fontSize: '1.02rem', color: '#222', background: '#fff' };
 
 export default ProgramManager; 

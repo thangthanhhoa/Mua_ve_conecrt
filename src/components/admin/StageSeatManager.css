@@ -1,0 +1,161 @@
+.stage-seat-manager {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stage-seat-manager h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.stage-selection {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.stage-selection h3 {
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.stage-selection select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.seat-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.seat-form h3 {
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.seat-form input,
+.seat-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.seat-form button {
+  background: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.seat-form button:hover {
+  background: #45a049;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1;
+}
+
+.cancel-button {
+  background: #f44336 !important;
+}
+
+.cancel-button:hover {
+  background: #d32f2f !important;
+}
+
+.seat-list {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.seat-list h3 {
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.seat-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seat-list th,
+.seat-list td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.seat-list th {
+  background: #f5f5f5;
+  font-weight: bold;
+  color: #444;
+}
+
+.seat-list tr:hover {
+  background: #f9f9f9;
+}
+
+.seat-list button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.seat-list button:first-child {
+  background: #2196F3;
+  color: white;
+}
+
+.seat-list button:last-child {
+  background: #f44336;
+  color: white;
+}
+
+.seat-list button:hover {
+  background: #d32f2f;
+}
+
+@media (max-width: 768px) {
+  .stage-seat-manager {
+    padding: 10px;
+  }
+
+  .seat-form,
+  .seat-list {
+    padding: 15px;
+  }
+
+  .seat-list th,
+  .seat-list td {
+    padding: 8px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+} 
