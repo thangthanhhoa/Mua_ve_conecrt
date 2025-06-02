@@ -7,6 +7,8 @@ import TicketManager from './TicketManager';
 import Dashboard from './Dashboard';
 import EmployeeManager from './EmployeeManager';
 import './AdminDashboard.css';
+import { MdDashboard } from 'react-icons/md';
+import { FaUserFriends, FaMapMarkerAlt, FaMusic, FaClipboardList, FaTicketAlt, FaUserTie } from 'react-icons/fa';
 
 const AdminDashboard = ({ onLogout }) => {
   const [tab, setTab] = useState('dashboard');
@@ -16,13 +18,13 @@ const AdminDashboard = ({ onLogout }) => {
       <aside className="admin-sidebar">
         <h2>Quản trị viên</h2>
         <nav>
-          <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>Tổng quan</button>
-          <button className={tab === 'customer' ? 'active' : ''} onClick={() => setTab('customer')}>Khách hàng</button>
-          <button className={tab === 'stage' ? 'active' : ''} onClick={() => setTab('stage')}>Địa điểm</button>
-          <button className={tab === 'program' ? 'active' : ''} onClick={() => setTab('program')}>Chương trình</button>
-          <button className={tab === 'order' ? 'active' : ''} onClick={() => setTab('order')}>Đơn hàng</button>
-          <button className={tab === 'ticket' ? 'active' : ''} onClick={() => setTab('ticket')}>Vé</button>
-          <button className={tab === 'employee' ? 'active' : ''} onClick={() => setTab('employee')}>Nhân viên</button>
+          <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}><MdDashboard style={{marginRight:8}}/>Tổng quan</button>
+          <button className={tab === 'customer' ? 'active' : ''} onClick={() => setTab('customer')}><FaUserFriends style={{marginRight:8}}/>Khách hàng</button>
+          <button className={tab === 'stage' ? 'active' : ''} onClick={() => setTab('stage')}><FaMapMarkerAlt style={{marginRight:8}}/>Địa điểm</button>
+          <button className={tab === 'program' ? 'active' : ''} onClick={() => setTab('program')}><FaMusic style={{marginRight:8}}/>Chương trình</button>
+          <button className={tab === 'order' ? 'active' : ''} onClick={() => setTab('order')}><FaClipboardList style={{marginRight:8}}/>Đơn hàng</button>
+          <button className={tab === 'ticket' ? 'active' : ''} onClick={() => setTab('ticket')}><FaTicketAlt style={{marginRight:8}}/>Vé</button>
+          <button className={tab === 'employee' ? 'active' : ''} onClick={() => setTab('employee')}><FaUserTie style={{marginRight:8}}/>Nhân viên</button>
           <button className="logout-btn" onClick={onLogout}>Đăng xuất</button>
         </nav>
       </aside>

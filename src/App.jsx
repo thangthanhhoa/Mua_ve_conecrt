@@ -219,12 +219,19 @@ function App() {
   }
 
   if (user.role === 'admin') {
-    return <AdminDashboard onLogout={handleLogout} />;
-  }
-  if (user.role === 'employee') {
+    // Chỉ render layout admin
     return (
-      <EmployeeDashboard onLogout={handleLogout} />
+      <Router>
+        <Routes>
+          <Route path="/admin/*" element={<AdminDashboard onLogout={handleLogout} />} />
+          <Route path="*" element={<Navigate to="/admin" />} />
+        </Routes>
+      </Router>
     );
+  }
+
+  if (user.role === 'employee') {
+    return <EmployeeDashboard onLogout={handleLogout} />;
   }
 
   // Menu cho khách hàng
@@ -239,11 +246,9 @@ function App() {
     </nav>
   );
 
+  // Layout cho khách hàng
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/admin" replace />} />
-      </Routes>
       <div className="app-container">
         <header className="header">
           <h1>Hệ Thống Đặt Vé Xem Ca Nhạc</h1>

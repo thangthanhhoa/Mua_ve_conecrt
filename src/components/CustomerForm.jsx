@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import './CustomerForm.css'
 
-const CustomerForm = ({ onNext, events, seatRows }) => {
+const CustomerForm = ({ onNext, events, seatRows, customer }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
     event: events[0]?.event_id || '',
     row: seatRows[0] || ''
   })
@@ -19,36 +16,6 @@ const CustomerForm = ({ onNext, events, seatRows }) => {
     <div className="customer-form">
       <h2>Thông Tin Đặt Vé</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Họ tên:</label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-            placeholder="Họ tên"
-          />
-        </div>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            required
-            placeholder="Email"
-          />
-        </div>
-        <div className="form-group">
-          <label>Số Điện Thoại:</label>
-          <input
-            type="text"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            required
-            placeholder="Số điện thoại"
-          />
-        </div>
         <div className="form-group">
           <label>Sự kiện:</label>
           <select value={formData.event} onChange={e => setFormData({ ...formData, event: e.target.value })} required>
