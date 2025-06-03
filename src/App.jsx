@@ -132,22 +132,23 @@ function App() {
       setLoading(true);
       setError('');
 
+      // Khôi phục logic đọc từ localStorage
       const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
       
       const found = existingUsers.find(u => 
         u.username === form.username && 
         u.password === form.password
       );
-      await userAPI.login(form).then(res => {
-        console.log(res);
-      });
+
       if (found) {
         setUser(found);
-        setShowLogin(true);
+        // Giữ lại setShowLogin(true) nếu bạn muốn form đăng nhập biến mất sau login
+        // setShowLogin(true);
       } else {
         setError('Tài khoản hoặc mật khẩu không đúng!');
       }
     } catch (err) {
+      // Xử lý lỗi localStorage nếu có (ít xảy ra)
       setError('Không thể đăng nhập. Vui lòng thử lại sau.');
       console.error(err);
     } finally {
