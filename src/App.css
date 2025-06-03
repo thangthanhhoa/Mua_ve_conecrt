@@ -48,43 +48,56 @@
 /* Main content */
 .main-content {
   display: flex;
-  gap: 2rem;
-  padding: 2rem;
-  flex: 1;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.left-section {
-  flex: 1;
-  max-width: 400px;
+/* Điều chỉnh lại style cho left/right section gốc để gọn hơn */
+/* Bố cục gọn gàng cho phần đặt vé */
+.booking-layout-compact {
+  display: flex;
+  width: 100%;
+  gap: 40px; /* Tăng khoảng cách giữa 2 cột */
+  flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+  align-items: flex-start; /* Căn chỉnh các cột lên trên */
+  justify-content: center; /* Căn giữa nội dung khi tổng chiều rộng nhỏ hơn 100% */
 }
 
-.right-section {
-  flex: 2;
-  min-width: 600px;
+.left-section-compact {
+  flex: 0 0 350px; /* Không co, không giãn, chiều rộng cố định 350px */
+  max-width: 100%; /* Đảm bảo không tràn trên màn hình nhỏ */
 }
 
-/* Bill container */
+.right-section-compact {
+   flex: 1; /* Chiếm phần còn lại */
+   min-width: 400px; /* Chiều rộng tối thiểu cho sơ đồ ghế */
+   max-width: 100%; /* Đảm bảo không tràn trên màn hình nhỏ */
+}
+
+/* Bill container - Giữ lại style gọn */
 .bill-container {
   background: white;
   border-radius: 10px;
-  padding: 2rem;
-  max-width: 400px;
-  min-width: 320px;
-  margin-top: 1.5rem;
+  padding: 20px;
+  max-width: 600px;
+  min-width: 300px;
+  margin: 20px auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bill-details {
-  margin: 1.5rem 0;
+  margin: 15px 0;
 }
 
 .bill-details p {
-  margin: 0.5rem 0;
+  margin: 5px 0;
+  font-size: 1rem;
 }
 
-/* Buttons */
+/* Buttons - Giữ lại style gọn */
 .confirm-button {
-  margin-top: 1.5rem;
+  margin-top: 15px;
   background: #4caf50;
   color: white;
   font-weight: bold;
@@ -118,18 +131,17 @@
   background: #1976d2;
 }
 
-/* Payment options */
+/* Payment options - Giữ lại style gọn */
 .payment-options {
-  margin-top: 1.5rem;
-  background: #f5f5f5;
-  padding: 1rem;
+  margin-top: 15px;
+  padding: 10px;
   border-radius: 8px;
 }
 
 .payment-buttons {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .payment-option-button {
@@ -148,33 +160,33 @@
   color: white;
 }
 
-/* Payment status */
+/* Payment status - Giữ lại style gọn */
 .payment-status {
-  margin-top: 1.5rem;
-  background: #e8f5e9;
-  padding: 1rem;
+  margin-top: 15px;
+  padding: 10px;
   border-radius: 8px;
 }
 
 .qr-code {
-  margin-top: 1rem;
-  text-align: center;
+  margin-top: 10px;
 }
 
 .qr-code img {
-  max-width: 200px;
-  margin-bottom: 0.5rem;
+  max-width: 150px;
+  margin-bottom: 5px;
 }
 
-/* Select seat message */
+/* Select seat message - Giữ lại style gọn */
 .select-seat-message {
   text-align: center;
-  padding: 2rem;
+  padding: 15px;
   background: white;
   border-radius: 8px;
   color: #666;
-  font-size: 1.1rem;
+  font-size: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto; /* Căn giữa */
 }
 
 .booking-confirmation {

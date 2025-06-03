@@ -10,6 +10,7 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    console.log(form);
     e.preventDefault();
     if (!form.username || !form.password) {
       setError('Vui lòng nhập đầy đủ thông tin!');

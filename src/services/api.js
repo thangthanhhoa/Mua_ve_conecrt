@@ -3,7 +3,7 @@ import axios from 'axios';
 // Tạo instance axios với cấu hình cơ bản
 const api = axios.create({
     // Kết nối với .NET backend ở D:\StageShowAPI
-    baseURL: 'http://localhost:5264/api', // Port mặc định của .NET 6/7
+    baseURL: 'http://localhost:5264/api', // đường link của ba
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -49,10 +49,10 @@ export const concertAPI = {
 };
 
 export const userAPI = {
-    login: (credentials) => api.post('/User/login', credentials),
-    register: (userData) => api.post('/User/register', userData),
-    getProfile: () => api.get('/User/profile'),
-    updateProfile: (data) => api.put('/User/profile', data)
+    login: (credentials) => api.post('/Users/login', credentials),
+    register: (userData) => api.post('/Users/register', userData),
+    getProfile: () => api.get('/Users/profile'),
+    updateProfile: (data) => api.put('/Users/profile', data)
 };
 
 export const employeeAPI = {

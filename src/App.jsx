@@ -12,6 +12,7 @@ import MyTickets from './components/MyTickets'
 import AdminDashboard from './components/admin/AdminDashboard'
 import OrderHistory from './components/user/OrderHistory'
 import ChangePassword from './components/user/ChangePassword'
+import { userAPI } from './services/api'
 // import ProfileSettings nếu có
 // import ProfileSettings from './components/user/ProfileSettings'
 
@@ -37,7 +38,7 @@ function App() {
     return saved ? JSON.parse(saved) : null;
   });
   const [showLogin, setShowLogin] = useState(true);
-  const [customer, setCustomer] = useState({ name: '', email: '', phone: '', event: '', row: '' });
+  const [customer, setCustomer] = useState({ name: '', email: '', phone: '', event: '' });
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [showBill, setShowBill] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -47,6 +48,8 @@ function App() {
   const [error, setError] = useState('');
   const [tab, setTab] = useState('dashboard');
   const [customerTab, setCustomerTab] = useState('booking');
+  const [bookingStep, setBookingStep] = useState('select-view');
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     // Thêm tài khoản nhân viên mẫu nếu chưa có
@@ -72,7 +75,7 @@ function App() {
     }
     localStorage.setItem('users', JSON.stringify(users));
     if (!user) {
-      setCustomer({ name: '', email: '', phone: '', event: '', row: '' });
+      setCustomer({ name: '', email: '', phone: '', event: '' });
       setSelectedSeats([]);
       setShowBill(false);
       setShowPayment(false);
@@ -135,7 +138,9 @@ function App() {
         u.username === form.username && 
         u.password === form.password
       );
-
+      await userAPI.login(form).then(res => {
+        console.log(res);
+      });
       if (found) {
         setUser(found);
         setShowLogin(true);
@@ -150,12 +155,9 @@ function App() {
     }
   };
 
-  const handleCustomerChange = (data) => {
-    setCustomer(data);
-    setSelectedSeats([]);
-    setShowBill(false);
-    setShowPayment(false);
-    setBillStatus('');
+  const handleCustomerChange = (event_id) => {
+    const event = mockEvents.find(e => e.event_id == event_id);
+    setSelectedEvent(event);
   };
 
   const handleSeatSelect = (seat) => {
@@ -167,7 +169,8 @@ function App() {
   }
 
   const handleShowBill = () => {
-    setShowBill(true)
+    setShowBill(true);
+    setBookingStep('show-bill');
   }
 
   const handlePayment = () => {
@@ -192,9 +195,7 @@ function App() {
     soldSeatIds.includes(s.stage_seat_id) ? { ...s, status: 'sold' } : s
   )
 
-  const totalPrice = selectedSeats.length > 0 && customer.row
-    ? selectedSeats.length * seatPrices[seatRows.indexOf(customer.row)]
-    : 0
+  const totalPrice = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
 
   if (!user) {
     return (
@@ -246,7 +247,7 @@ function App() {
     </nav>
   );
 
-  // Layout cho khách hàng
+  // Layout cho khách hàng với 2 view chính: Chọn vé (Form + Sơ đồ) và Hóa đơn
   return (
     <Router>
       <div className="app-container">
@@ -266,48 +267,57 @@ function App() {
         <main className="main-content">
           {customerTab === 'booking' && (
             <>
-              <div className="left-section">
-                <CustomerForm
-                  onNext={handleCustomerChange}
-                  events={mockEvents}
-                  seatRows={seatRows}
-                  customer={customer}
-                />
-              </div>
-              <div className="right-section">
-                {customer.row ? (
-                  <>
-                    <h2>Chọn Ghế Hạng {customer.row}</h2>
-                    <SeatSelection
-                      seats={seatsWithStatus.filter(s => s.row === customer.row)}
-                      selectedSeats={selectedSeats}
-                      onSelect={handleSeatSelect}
-                      stage={{ row: 1, col: 20 }}
+              {/* View Chọn vé: Form và Sơ đồ ghế cạnh nhau */}
+              {bookingStep === 'select-view' && (
+                <div className="booking-layout-compact">
+                  <div className="left-section-compact">
+                    <h2>Thông Tin Đặt Vé</h2>
+                    <CustomerForm
+                      onNext={handleCustomerChange}
+                      events={mockEvents}
                     />
-                    {selectedSeats.length > 0 && !showBill && (
-                      <button
-                        className="confirm-button"
-                        onClick={handleShowBill}
-                      >
-                        Xác nhận mua vé
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <div className="select-seat-message">
-                    Vui lòng chọn hạng ghế để tiếp tục
                   </div>
-                )}
+                  <div className="right-section-compact">
+                    <h2>Chọn Ghế</h2>
+                    {selectedEvent ? (
+                      <>
+                        <p>Sự kiện: <b>{selectedEvent.name}</b></p>
+                        <SeatSelection
+                          seats={seatsWithStatus}
+                          selectedSeats={selectedSeats}
+                          onSelect={handleSeatSelect}
+                          stage={{ row: 10, col: 20 }}
+                        />
+                        {selectedSeats.length > 0 && (
+                          <button
+                            className="confirm-button"
+                            onClick={handleShowBill}
+                            style={{marginTop: 20, padding: '12px 24px', fontSize: '1.1rem'}}
+                          >
+                            Xác nhận mua vé ({selectedSeats.length} ghế) - {totalPrice.toLocaleString('vi-VN')}đ
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <div className="select-seat-message">
+                        Vui lòng chọn sự kiện để xem sơ đồ ghế.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
-                {showBill && (
+              {/* View Hóa đơn và Thanh toán */}
+              {bookingStep === 'show-bill' && showBill && selectedEvent && (
+                 <div className="booking-step-container" style={{width: '100%', maxWidth: 600, margin: '0 auto'}}>
                   <div className="bill-container">
                     <h2>Hóa Đơn Đặt Vé</h2>
                     <div className="bill-details">
-                      <p><b>Họ tên:</b> {customer?.name}</p>
-                      <p><b>Số điện thoại:</b> {customer?.phone}</p>
-                      <p><b>Hạng ghế:</b> {customer.row}</p>
-                      <p><b>Danh sách ghế:</b> {selectedSeats.map(s => `${s.row}${s.col}`).join(', ')}</p>
-                      <p><b>Giá mỗi ghế:</b> {seatPrices[seatRows.indexOf(customer.row)].toLocaleString('vi-VN')}đ</p>
+                      <p><b>Họ tên:</b> {user?.name}</p>
+                      <p><b>Số điện thoại:</b> {user?.phone}</p>
+                      <p><b>Sự kiện:</b> {selectedEvent.name}</p>
+                      <p><b>Thời gian:</b> {selectedEvent.time}</p>
+                      <p><b>Danh sách ghế:</b> {selectedSeats.map(s => `${s.row}${s.col} (${s.price.toLocaleString('vi-VN')}đ)`).join(', ')}</p>
                       <p><b>Số lượng ghế:</b> {selectedSeats.length}</p>
                       <p><b>Tổng tiền:</b> {totalPrice.toLocaleString('vi-VN')}đ</p>
                     </div>
@@ -316,8 +326,9 @@ function App() {
                       <button 
                         className="payment-button"
                         onClick={handlePayment}
+                        style={{marginTop: 20, padding: '12px 24px', fontSize: '1.1rem'}}
                       >
-                        Thanh toán
+                        Tiến hành Thanh toán
                       </button>
                     )}
 
@@ -356,8 +367,9 @@ function App() {
                       </div>
                     )}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+
             </>
           )}
           {customerTab === 'events' && (
